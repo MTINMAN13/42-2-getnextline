@@ -34,8 +34,8 @@ In C, there are three standard file descriptors:
 1 (stdout): Standard output, where your program can send output, often the console.
 2 (stderr): Standard error, used for error messages.
 
-> le example has arive
-
+_*le example has arive 🥇*_
+```
 #include <stdio.h>
 #include <unistd.h>
 
@@ -53,14 +53,16 @@ int main() {
 
     return 0;
 }
+```
 
-(_... in this example we OBVIOUSLY read from keyboard input_)
-> A SIDE NOTE :
+> (_... in this example we OBVIOUSLY read from keyboard input_)
+###### A SIDE NOTE :
 
 _In C, you typically don't need to manually find the file descriptor of an already open file. When you open a file using functions like fopen or open, the operating system automatically assigns a file descriptor to the opened file. You can then use this file descriptor to perform read and write operations on the file._
 
 > deja vu ? exmaple arive? OKAY
 
+```
 #include <fcntl.h>
 
 int main() {
@@ -76,6 +78,7 @@ int main() {
     close(fd);
     return 0;
 }
+```
 
 ______________________
 ## Program reqs. 🙂
