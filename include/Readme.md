@@ -104,3 +104,68 @@ Freebies
 
 8. Implementing `get_next_line()` using only one static variable.
 9. Ensure that `get_next_line()` can manage multiple file descriptors simultaneously, allowing for reading from different file descriptors without losing the reading context of each file descriptor or returning a line from another file descriptor.
+
+
+______________________________________________
+
+1. I want to find the newline character and read until that part
+
+read(fd, buffer, sizeof(buffer));
+
+so the fd is being passed in from get/next/line
+
+buffer is the place where we store the chars up until the first /n (NEWLINE)
+
+
+```
+read() attempts to read up to count bytes from file descriptor fd
+into the buffer starting at buf.
+```
+##### Return Values
+###### ssize_t read(int fd, void *buf, size_t count);
+
+/ According to POSIX.1, if count is greater than SSIZE_MAX, the
+result is implementation-defined; see NOTES for the upper limit
+on Linux.
+
+
+/ On error, -1 is returned.
+
+ssize_t is a signed integer type that is often used to represent the number of bytes read or written.
+
+///////////////////////////////
+
+we should RETURN THE LINE THAT WAS READ
+
+get_next_line shoud return NULL on error
+
+also
+
+We probably want to implement a Structure which will be the Static Variable
+nah
+
+gon be pointer to pointer aka 2D array
+
+or something
+
+## RETURN VALUE FR FR NO CAP BUSSIN
+As for the Return value, that will be ALWAYS including the /n charracter
+
+UNLESS there is none AND we hit END OF FILE.
+
+
+//////
+
+### Thoughts.
+
+#### #ifndef
+```
+#ifndef Buffer_Size
+#define Buffer_Size 1024  // Default buffer size
+#endif
+```
+```
+```
+In this code, we use #ifndef to check if Buffer_Size is defined. If it's not defined, we set a default value (in this case, 1024) using #define. This allows you to use Buffer_Size in your code, and when you compile the program with -D Buffer_Size=42, it will override the default value.
+
+The #ifndef directive in C is a preprocessor directive that stands for "if not defined."
