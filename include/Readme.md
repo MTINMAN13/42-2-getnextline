@@ -169,3 +169,25 @@ UNLESS there is none AND we hit END OF FILE.
 In this code, we use #ifndef to check if Buffer_Size is defined. If it's not defined, we set a default value (in this case, 1024) using #define. This allows you to use Buffer_Size in your code, and when you compile the program with -D Buffer_Size=42, it will override the default value.
 
 The #ifndef directive in C is a preprocessor directive that stands for "if not defined."
+\\
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
