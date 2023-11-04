@@ -11,6 +11,28 @@ So, let's say you have a function that counts how many times you've visited a pa
 
 In a nutshell, a static variable is a special type of memory in your computer that remembers its value even when you're not using it, just like your magical cookie jar remembers how many times you've visited the park.
 
+
+----------------
+
+##### FUNCTIONS
+
+*ft_strlen(const char *s): *This function calculates the length of a given string s and returns the number of characters in it.
+
+
+*ft_strrchr(const char *s, int c):* This function searches for the last occurrence of a character c in the string s. If the character is found, it returns a pointer to that character; otherwise, it returns NULL.
+
+
+*ft_strjoin(char *s1, char *s2):* This function concatenates two strings s1 and s2 and returns a new string that contains the concatenated result. It dynamically allocates memory for the result string using malloc. The function also frees the memory occupied by s1.
+
+
+
+*ft_newline_parser(char *available_text):* This function is used to parse a string available_text until it encounters the newline character ('\n'). It extracts the part of the string after the newline character and returns it as a new string. It dynamically allocates memory for the new string and frees the memory of the original string.
+
+
+*ft_overwrite_buffer(char *whatever):* This function is somewhat similar to ft_newline_parser, but instead of parsing until a newline character, it extracts the part of the string after the first newline character and returns it as a new string. It also dynamically allocates memory for the new string and frees the memory of the original string.
+
+--------------
+
 ###### read | function
 
 SO read can be used to READ.  4Head
@@ -175,7 +197,45 @@ The #ifndef directive in C is a preprocessor directive that stands for "if not d
 
 
 
+some old random notes
 
+// So i WANT TO SOMEHOW PASS IN THE BUFFER_SIZE from my compiler call
+// A; by ifndef we set default
+// I will Compile like this
+//
+//cc -Wall -Wextra -Werror -D Buffer_Size=42 <files>.c
+
+
+// Always remember ERROR HANDLING
+
+// I want to RETURN the VALUE / LINE which WAS READ
+// malloc gon happen
+// free gon happen when itl be supposed to
+// maybe in a separate function (handler)
+
+// we want to work on two options, as i might
+// skip over the /n
+// as cant directly influence the buffer size
+// so we will always have to back track (unless 1 is the value)
+
+// - 00 - i will probably want to recode things like strrchr
+// as I want a thing which will locate the line end
+// -- 01 -- i want a function which will allocate the memory necessary to
+// accomplish this shit
+// -- 02 -- i want a function which moves the Buffer (USED FOR LINE LOCATOR UP and DOWN)
+//
+
+// as we have read(fd, buffer, sizeof(Buffer_Size));
+// we probably want to have the ?? array as the buffer ??
+// -- or -- we want to have what
+
+// and how the FUCK do we want to start reading the next fucking line tho
+// where do we even pass that shit in
+
+// we want to read text --> check for next line --> if no, repeat - if yes, close out the cycle.
+//
+
+//
 
 
 
