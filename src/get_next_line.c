@@ -6,7 +6,7 @@
 /*   By: mman <mman@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 19:28:32 by mman              #+#    #+#             */
-/*   Updated: 2023/11/04 19:25:41 by mman             ###   ########.fr       */
+/*   Updated: 2023/11/05 18:00:09 by mman             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <stdlib.h>
 # include <unistd.h>
 
+# define BUFFER_SIZE 69
+
 size_t	ft_strlen(const char *s)
 {
 	size_t	i;
@@ -29,21 +31,16 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strrchr(const char *s, int c)
+char	*ft_strchr(const char *s, int c)
 {
-	int			s_len;
-	const char	*end;
-
-	s_len = ft_strlen(s);
-	end = s + s_len - 1;
-	if (c == '\0')
-		return ((char *)s + s_len);
-	while (end >= s)
+	while (*s)
 	{
-		if (*end == (char)c)
-			return ((char *)end);
-		end--;
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
 	}
+	if (*s == (char)c)
+		return ((char *)s);
 	return (NULL);
 }
 
@@ -89,4 +86,42 @@ char	*ft_strjoin(char *s1, char *s2)
 	*result = '\0';
 	free (s1);
 	return (temp);
+}
+
+// i want to read until ft_strchr(swap, '/n'); doesnt return NULL.
+char	*ft_read_raw(int fd)
+{
+	char	*swap;
+	ssize_t	bytes_read;
+
+	swap = (char *)malloc(BUFFER_SIZE + 1);
+	if (swap == NULL)
+		return (NULL);
+	while (ft_strchr(swap, '/n') !=)
+	bytes_read = read(fd, swap, BUFFER_SIZE);
+	if (bytes_read == -1)
+	{
+		free(swap);
+		return (NULL);
+	}
+	swap[bytes_read] == '\0';
+	return (swap);
+}
+
+
+// i want to dupe the part from first byte up until /n into the line which is
+// returned
+// it should not include the terminating /n character
+char	*ft_return_line(char raw_mess)
+{
+	char	*swap;
+
+	ft_strchr(raw_mess, '/n');
+}
+
+// i want to remove the first line and reallocate the next line at the start
+// i want it to end with
+char	*ft_clean_line(char raw_mess)
+{
+
 }
