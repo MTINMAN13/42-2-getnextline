@@ -96,8 +96,7 @@ char	*ft_read_raw(int fd)
 
 	swap = (char *)malloc(BUFFER_SIZE + 1);
 	if (swap == NULL)
-		return (NULL);
-	while (ft_strchr(swap, '/n') !=)
+	return (NULL);
 	bytes_read = read(fd, swap, BUFFER_SIZE);
 	if (bytes_read == -1)
 	{
@@ -106,6 +105,13 @@ char	*ft_read_raw(int fd)
 	}
 	swap[bytes_read] == '\0';
 	return (swap);
+}
+
+char	*ft_update_static_str(char str, int fd)
+{
+	while (ft_strchr(str, '/n') == NULL)
+		str = ft_strjoin(str, ft_read_raw(fd));
+
 }
 
 
