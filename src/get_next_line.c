@@ -6,7 +6,7 @@
 /*   By: mman <mman@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 19:28:32 by mman              #+#    #+#             */
-/*   Updated: 2023/11/05 18:00:09 by mman             ###   ########.fr       */
+/*   Updated: 2023/11/06 19:27:10 by mman             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,20 +109,45 @@ char	*ft_read_raw(int fd)
 
 char	*ft_update_static_str(char str, int fd)
 {
+	char	*temporary_storage;
 	while (ft_strchr(str, '/n') == NULL)
-		str = ft_strjoin(str, ft_read_raw(fd));
-
+	{
+		temporary_storage = ft_read_raw(fd);
+		str = ft_strjoin(str, temporary_storage);
+			if (ft_strlen(temporary_storage) < BUFFER_SIZE)
+				{
+					free(temporary_storage);
+					return(str);
+				}
+		free(temporary_storage);
+	}
 }
-
 
 // i want to dupe the part from first byte up until /n into the line which is
 // returned
 // it should not include the terminating /n character
-char	*ft_return_line(char raw_mess)
+char	*ft_return_line(char *raw_mess)
 {
 	char	*swap;
+	char	*line_start;
 
-	ft_strchr(raw_mess, '/n');
+	line_start = raw_mess;
+	swap = line_start;
+	while (*raw_mess != '/n' && *raw_mess != '\n')
+	{
+		*swap = *raw_mess;
+		raw_mess++;
+		swap++;
+	}
+	if (*raw_mess == '\n') {
+		*swap = *raw_mess;
+		raw_mess++;
+		swap++;
+	}
+	*swap = '\0';
+	if (*line_start == '\0')
+		return (NULL);
+	return (line_start);
 }
 
 // i want to remove the first line and reallocate the next line at the start
