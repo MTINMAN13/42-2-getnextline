@@ -6,7 +6,7 @@
 /*   By: mman <mman@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 19:28:32 by mman              #+#    #+#             */
-/*   Updated: 2023/11/06 19:27:10 by mman             ###   ########.fr       */
+/*   Updated: 2023/11/07 20:51:50 by mman             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,143 +16,89 @@
 //             tors without losing the reading context of each file descriptor
 //             or returning a line from another file descriptor. array[A][1]
 
-# include <stdlib.h>
-# include <unistd.h>
+#include "get_next_line.h"
 
-# define BUFFER_SIZE 69
-
-size_t	ft_strlen(const char *s)
+char	*ft_overwrite_static(char *current_str)
 {
-	size_t	i;
+	int		i;
+	int		j;
+	char	*new_stuff;
 
 	i = 0;
-	while (s[i])
+	while (current_str[i] && current_str[i] != '\n')
 		i++;
-	return (i);
-}
-
-char	*ft_strchr(const char *s, int c)
-{
-	while (*s)
+	if (!current_str[i])
 	{
-		if (*s == (char)c)
-			return ((char *)s);
-		s++;
-	}
-	if (*s == (char)c)
-		return ((char *)s);
-	return (NULL);
-}
-
-char	*ft_strdup(const char *str)
-{
-	char	*dupe;
-	size_t	i;
-
-	dupe = (char *)malloc(sizeof(char) * (ft_strlen(str) + 1));
-	if (dupe == NULL)
-	{
+		free(current_str);
 		return (NULL);
 	}
-	i = 0;
-	while (str[i] != '\0')
-	{
-		dupe[i] = str[i];
-		i++;
-	}
-	dupe[i] = '\0';
-	return (dupe);
-}
-
-char	*ft_strjoin(char *s1, char *s2)
-{
-	size_t	len_s1;
-	size_t	len_s2;
-	char	*temp;
-	char	*result;
-
-	len_s1 = ft_strlen(s1);
-	len_s2 = ft_strlen(s2);
-	result = (char *)malloc(len_s1 + len_s2 + 1);
-	temp = result;
-	if (!result)
+	new_stuff = (char *)malloc(sizeof(char)
+			* (ft_strlen(current_str) - i + 1));
+	if (!new_stuff)
 		return (NULL);
-	if (s1)
-		while (*s1)
-			*result++ = *s1++;
-	if (s2)
-		while (*s2)
-			*result++ = *s2++;
-	*result = '\0';
-	free (s1);
-	return (temp);
+	i++;
+	j = 0;
+	while (current_str[i])
+		new_stuff[j++] = current_str[i++];
+	new_stuff[j] = '\0';
+	free(current_str);
+	return (new_stuff);
 }
 
-// i want to read until ft_strchr(swap, '/n'); doesnt return NULL.
-char	*ft_read_raw(int fd)
+char	*ft_read_and_append(int fd, char *saved_str)
 {
-	char	*swap;
-	ssize_t	bytes_read;
+	char	*buffer;
+	int		bytes_read;
 
-	swap = (char *)malloc(BUFFER_SIZE + 1);
-	if (swap == NULL)
-	return (NULL);
-	bytes_read = read(fd, swap, BUFFER_SIZE);
-	if (bytes_read == -1)
-	{
-		free(swap);
+	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buffer)
 		return (NULL);
+	bytes_read = 1;
+	while (!ft_strchr(saved_str, '\n') && bytes_read != 0)
+	{
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read == -1)
+		{
+			free(buffer);
+			return (NULL);
+		}
+		buffer[bytes_read] = '\0';
+		saved_str = ft_strjoin(saved_str, buffer);
 	}
-	swap[bytes_read] == '\0';
-	return (swap);
+	free(buffer);
+	return (saved_str);
 }
 
-char	*ft_update_static_str(char str, int fd)
+char	*get_next_line(int fd)
 {
-	char	*temporary_storage;
-	while (ft_strchr(str, '/n') == NULL)
-	{
-		temporary_storage = ft_read_raw(fd);
-		str = ft_strjoin(str, temporary_storage);
-			if (ft_strlen(temporary_storage) < BUFFER_SIZE)
-				{
-					free(temporary_storage);
-					return(str);
-				}
-		free(temporary_storage);
-	}
-}
+	char		*line;
+	static char	*saved_str[4096];
 
-// i want to dupe the part from first byte up until /n into the line which is
-// returned
-// it should not include the terminating /n character
-char	*ft_return_line(char *raw_mess)
-{
-	char	*swap;
-	char	*line_start;
-
-	line_start = raw_mess;
-	swap = line_start;
-	while (*raw_mess != '/n' && *raw_mess != '\n')
-	{
-		*swap = *raw_mess;
-		raw_mess++;
-		swap++;
-	}
-	if (*raw_mess == '\n') {
-		*swap = *raw_mess;
-		raw_mess++;
-		swap++;
-	}
-	*swap = '\0';
-	if (*line_start == '\0')
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	return (line_start);
+	saved_str[fd] = ft_read_and_append(fd, saved_str[fd]);
+	if (!saved_str[fd])
+		return (NULL);
+	line = ft_line_parsed(saved_str[fd]);
+	saved_str[fd] = ft_overwrite_static(saved_str[fd]);
+	return (line);
 }
 
-// i want to remove the first line and reallocate the next line at the start
-// i want it to end with
-char	*ft_clean_line(char raw_mess)
+int	main(void)
 {
+	char	*line;
+	int		line_num;
+	int		fd1;
 
+	fd1 = open("asd.txt", O_RDONLY);
+	line_num = 1;
+	while (line_num < 7)
+	{
+		line = get_next_line(fd1);
+		printf("line [%02d] from fd1: %s\n", line_num, line);
+		free(line);
+		line_num++;
+	}
+	close(fd1);
+	return (0);
 }
