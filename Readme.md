@@ -16,6 +16,8 @@ In a nutshell, a static variable is a special type of memory in your computer th
 
 ##### FUNCTIONS
 
+THE MOST IMPORT
+
 *ft_strlen(const char *s): *This function calculates the length of a given string s and returns the number of characters in it.
 
 
