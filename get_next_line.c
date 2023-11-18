@@ -6,15 +6,9 @@
 /*   By: mman <mman@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 19:28:32 by mman              #+#    #+#             */
-/*   Updated: 2023/11/16 21:03:00 by mman             ###   ########.fr       */
+/*   Updated: 2023/11/18 18:52:10 by mman             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-// BONUS ONE * Implementing get_next_line() using only one static variable.
-// BONUS DUO * Ensure that get_next_line() can manage multiple file descriptors
-//             simultaneously, allowing for reading from different file descrip-
-//             tors without losing the reading context of each file descriptor
-//             or returning a line from another file descriptor. array[A][1]
 
 #include "get_next_line.h"
 
@@ -72,15 +66,15 @@ char	*ft_read_and_append(int fd, char *saved_str)
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*saved_str[4096];
+	static char	*saved_str;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	saved_str[fd] = ft_read_and_append(fd, saved_str[fd]);
-	if (!saved_str[fd])
+	saved_str = ft_read_and_append(fd, saved_str);
+	if (!saved_str)
 		return (NULL);
-	line = ft_line_parsed(saved_str[fd]);
-	saved_str[fd] = ft_overwrite_static(saved_str[fd]);
+	line = ft_line_parsed(saved_str);
+	saved_str = ft_overwrite_static(saved_str);
 	return (line);
 }
 
